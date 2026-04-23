@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SES Stores — Cessnock City Unit</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --orange:#FF5A00;--navy:#0B1F3A;--navy2:#132c52;--blue2:#1E88E5;
+  --steel:#37474F;--steel2:#546E7A;--bg:#0D1B2A;--card:#132035;
+  --card2:#1A2B42;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#E8EDF2;--muted:#7A93AB;--green:#00C853;--red:#FF1744;
+  --yellow:#FFD600;--amber:#FF8F00;--r:10px;--rs:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;height:-webkit-fill-available}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;position:fixed;width:100%}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;transition:opacity .25s,transform .25s}
+.screen.hidden{opacity:0;pointer-events:none;transform:translateY(12px)}
+
+/* ── LOGIN ── */
+#loginScreen{background:linear-gradient(145deg,#0B1F3A,#0D2744,#0A1929);align-items:center;justify-content:center;padding:20px}
+.login-card{width:100%;max-width:400px;background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:32px 24px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.login-logo{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.logo-badge{width:52px;height:52px;border-radius:13px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 4px 20px rgba(255,90,0,.4)}
+.login-logo h1{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:800;letter-spacing:.5px;line-height:1.2}
+.login-logo p{font-size:11px;color:var(--muted);margin-top:3px}
+.login-app-tag{font-size:10px;background:rgba(0,200,83,.15);border:1px solid rgba(0,200,83,.3);color:var(--green);padding:2px 8px;border-radius:10px;display:inline-block;margin-top:4px;font-weight:700;letter-spacing:.5px}
+.divider{height:1px;background:var(--border);margin:0 0 20px}
+.flabel{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.fwrap{margin-bottom:13px}
+.finput{width:100%;padding:13px 15px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:var(--rs);color:var(--text);font-family:'Barlow',sans-serif;font-size:16px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.finput:focus{border-color:var(--orange);background:rgba(255,90,0,.06)}
+.finput::placeholder{color:var(--muted);font-size:14px}
+.fselect{width:100%;padding:11px 13px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:var(--rs);color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;outline:none;-webkit-appearance:none;transition:border-color .2s}
+.fselect:focus{border-color:var(--orange)}
+.login-hint{font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.6;background:rgba(255,255,255,.04);border-radius:6px;padding:10px 12px}
+.login-hint b{color:var(--text)}
+.btn-primary{width:100%;padding:14px;border:none;border-radius:var(--rs);background:var(--orange);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s;box-shadow:0 4px 20px rgba(255,90,0,.35)}
+.btn-primary:active{transform:scale(.98)}
+.login-err{color:#FF6B6B;font-size:13px;margin-top:10px;text-align:center;min-height:18px}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--navy);border-bottom:1px solid var(--border);flex-shrink:0;min-height:52px}
+.topbar-title{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn-back{background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.btn-logout{background:transparent;border:1px solid rgba(255,90,0,.4);color:var(--orange);padding:6px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.btn-topicon{background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;display:none;align-items:center;gap:4px}
+.btn-topicon.show{display:flex}
+.btn-topicon.orange{border-color:rgba(255,90,0,.4);color:var(--orange)}
+.btn-topicon.green-btn{border-color:rgba(0,200,83,.4);color:var(--green)}
+
+/* ── CONTENT AREA ── */
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+
+/* ── DASHBOARD ── */
+#dashView{padding:14px}
+.dash-banner{background:linear-gradient(135deg,#0a1f0f,#0d2b18);border:1px solid rgba(0,200,83,.25);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.dash-banner h2{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--green)}
+.dash-banner p{font-size:12px;color:var(--muted);margin-top:3px}
+.dash-role-chip{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px;border:1px solid}
+.dash-role-chip.owner{background:rgba(255,90,0,.15);border-color:rgba(255,90,0,.4);color:var(--orange)}
+.dash-role-chip.commander{background:rgba(30,136,229,.15);border-color:rgba(30,136,229,.4);color:var(--blue2)}
+.dash-role-chip.admin{background:rgba(0,200,83,.12);border-color:rgba(0,200,83,.35);color:var(--green)}
+.dash-role-chip.member{background:rgba(255,255,255,.06);border-color:var(--border);color:var(--muted)}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.sum-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:10px 6px;text-align:center}
+.sum-card .n{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800}
+.sum-card .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.sum-card.ok .n{color:var(--green)}
+.sum-card.low .n{color:var(--yellow)}
+.sum-card.crit .n{color:var(--red)}
+.sum-card.unk .n{color:var(--muted)}
+.dash-quick-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.qbtn{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 14px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;transition:all .2s}
+.qbtn::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.qbtn.green-accent::before{background:var(--green)}
+.qbtn.orange-accent::before{background:var(--orange)}
+.qbtn.blue-accent::before{background:var(--blue2)}
+.qbtn.red-accent::before{background:var(--red)}
+.qbtn:active{transform:scale(.97);background:var(--card2)}
+.qbtn-icon{font-size:22px}
+.qbtn-label{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700}
+.qbtn-sub{font-size:11px;color:var(--muted)}
+.alert-box{background:rgba(255,23,68,.06);border:1px solid rgba(255,23,68,.25);border-radius:var(--r);padding:14px;margin-bottom:14px}
+.alert-box-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.alert-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px}
+.alert-row:last-child{border-bottom:none}
+.alert-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.alert-dot.red{background:var(--red);box-shadow:0 0 6px rgba(255,23,68,.5)}
+.alert-dot.yellow{background:var(--yellow);box-shadow:0 0 6px rgba(255,214,0,.5)}
+.alert-info{flex:1;min-width:0}
+.alert-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alert-meta{font-size:10px;color:var(--muted);margin-top:1px}
+.alert-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;flex-shrink:0}
+.alert-badge.crit{background:rgba(255,23,68,.2);color:var(--red);border:1px solid rgba(255,23,68,.3)}
+.alert-badge.low{background:rgba(255,214,0,.15);color:var(--yellow);border:1px solid rgba(255,214,0,.3)}
+.alert-badge.expiry{background:rgba(255,143,0,.15);color:var(--amber);border:1px solid rgba(255,143,0,.3)}
+.sec-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+
+/* ── INVENTORY LIST ── */
+#invView{padding:14px}
+.inv-banner{background:linear-gradient(135deg,#0a1f0f,#0d2b18);border:1px solid rgba(0,200,83,.25);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.inv-banner h2{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--green)}
+.inv-banner p{font-size:12px;color:var(--muted);margin-top:3px}
+.inv-search-wrap{position:relative;margin-bottom:10px}
+.inv-search{width:100%;padding:11px 14px 11px 38px;background:var(--card);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.inv-search:focus{border-color:var(--green)}
+.inv-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px;pointer-events:none}
+.filter-row{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+.filter-row::-webkit-scrollbar{display:none}
+.fbtn{flex-shrink:0;padding:6px 12px;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
+.fbtn.active{border-color:var(--green);color:var(--green);background:rgba(0,200,83,.1)}
+.fbtn.active.warn{border-color:var(--yellow);color:var(--yellow);background:rgba(255,214,0,.1)}
+.fbtn.active.danger{border-color:var(--red);color:var(--red);background:rgba(255,23,68,.1)}
+.inv-add-btn{width:100%;padding:12px;border:1.5px solid var(--green);border-radius:var(--rs);background:rgba(0,200,83,.1);color:var(--green);font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.5px;cursor:pointer;margin-bottom:12px;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.inv-add-btn:active{background:rgba(0,200,83,.2)}
+.inv-list{display:flex;flex-direction:column;gap:8px;padding-bottom:24px}
+.inv-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
+.inv-card.s-good{border-left:3px solid var(--green)}
+.inv-card.s-low{border-left:3px solid var(--yellow)}
+.inv-card.s-critical{border-left:3px solid var(--red)}
+.inv-card.s-expiring{border-left:3px solid var(--amber)}
+.inv-card.s-unknown{border-left:3px solid var(--muted)}
+.inv-card.s-na{border-left:3px solid var(--steel)}
+.inv-card-top{display:flex;align-items:flex-start;gap:10px;padding:11px 13px}
+.inv-card-icon{font-size:21px;flex-shrink:0;margin-top:1px}
+.inv-card-info{flex:1;min-width:0}
+.inv-card-name{font-size:13px;font-weight:700;line-height:1.3}
+.inv-card-loc{font-size:11px;color:var(--muted);margin-top:3px}
+.inv-card-loc span{background:rgba(255,255,255,.06);border-radius:8px;padding:1px 7px;margin-right:4px;display:inline-block;margin-top:2px}
+.inv-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+.badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;border:1px solid}
+.badge.c-consumable{background:rgba(30,136,229,.12);color:var(--blue2);border-color:rgba(30,136,229,.3)}
+.badge.c-equipment{background:rgba(255,90,0,.1);color:var(--orange);border-color:rgba(255,90,0,.25)}
+.badge.c-ppe{background:rgba(255,214,0,.1);color:var(--yellow);border-color:rgba(255,214,0,.3)}
+.badge.c-tool{background:rgba(150,100,255,.12);color:#c084fc;border-color:rgba(150,100,255,.3)}
+.badge.c-rescue{background:rgba(255,23,68,.1);color:#ff6b8a;border-color:rgba(255,23,68,.25)}
+.badge.c-firstaid{background:rgba(255,143,0,.1);color:var(--amber);border-color:rgba(255,143,0,.3)}
+.badge.c-comms{background:rgba(6,182,212,.12);color:#67e8f9;border-color:rgba(6,182,212,.3)}
+.badge.c-vehicle{background:rgba(0,200,83,.1);color:var(--green);border-color:rgba(0,200,83,.25)}
+.badge.c-other{background:rgba(255,255,255,.05);color:var(--muted);border-color:var(--border)}
+.badge.s-good{background:rgba(0,200,83,.12);color:var(--green);border-color:rgba(0,200,83,.3)}
+.badge.s-low{background:rgba(255,214,0,.12);color:var(--yellow);border-color:rgba(255,214,0,.3)}
+.badge.s-critical{background:rgba(255,23,68,.12);color:var(--red);border-color:rgba(255,23,68,.3)}
+.badge.s-expiring{background:rgba(255,143,0,.12);color:var(--amber);border-color:rgba(255,143,0,.3)}
+.badge.s-unknown{background:rgba(255,255,255,.05);color:var(--muted);border-color:var(--border)}
+.badge.s-na{background:rgba(255,255,255,.03);color:var(--steel2);border-color:var(--border)}
+.inv-qty-row{display:flex;align-items:center;gap:8px;padding:0 13px 10px}
+.inv-qty-label{font-size:11px;color:var(--muted);flex:1}
+.inv-qty-ctrl{display:flex;align-items:center;gap:6px}
+.qty-btn{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:rgba(255,255,255,.06);color:var(--text);font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;line-height:1}
+.qty-btn:active{background:rgba(255,255,255,.15)}
+.qty-val{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;min-width:32px;text-align:center}
+.inv-expand-btn{width:100%;padding:7px;background:transparent;border:none;border-top:1px solid var(--border);color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.5px}
+.inv-detail{padding:10px 13px 13px;border-top:1px solid var(--border);display:none}
+.inv-detail.open{display:block}
+.detail-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.detail-row:last-child{border-bottom:none}
+.detail-key{color:var(--muted)}
+.detail-val{font-weight:600;text-align:right;max-width:60%;word-break:break-word}
+.detail-val.warn{color:var(--yellow)}
+.detail-val.danger{color:var(--red)}
+.detail-notes{margin-top:8px;font-size:12px;color:var(--muted);line-height:1.6;background:rgba(255,255,255,.03);border-radius:var(--rs);padding:8px}
+.detail-action-row{display:flex;gap:6px;margin-top:10px}
+.detail-btn{flex:1;padding:9px;border:1.5px solid var(--border);border-radius:var(--rs);background:transparent;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;text-align:center}
+.detail-btn:active{background:rgba(255,255,255,.08)}
+.detail-btn.edit{border-color:rgba(30,136,229,.4);color:var(--blue2)}
+.detail-btn.danger{border-color:rgba(255,23,68,.3);color:var(--red)}
+.inv-empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.inv-empty-icon{font-size:44px;margin-bottom:12px}
+.inv-empty p{font-size:13px;line-height:1.6}
+
+/* ── MEMBERS ── */
+#membersView{padding:14px}
+.members-banner{background:linear-gradient(135deg,#0a1325,#0d1e40);border:1px solid rgba(30,136,229,.25);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.members-banner h2{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--blue2)}
+.members-banner p{font-size:12px;color:var(--muted);margin-top:3px}
+.member-search-wrap{position:relative;margin-bottom:10px}
+.member-search{width:100%;padding:11px 14px 11px 38px;background:var(--card);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.member-search:focus{border-color:var(--blue2)}
+.member-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px;pointer-events:none}
+.member-list{display:flex;flex-direction:column;gap:6px;padding-bottom:20px}
+.member-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:11px 13px;display:flex;align-items:center;gap:10px}
+.member-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,90,0,.2);border:1.5px solid rgba(255,90,0,.3);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--orange);flex-shrink:0}
+.member-avatar.cmd{background:rgba(30,136,229,.2);border-color:rgba(30,136,229,.3);color:var(--blue2)}
+.member-avatar.mbr{background:rgba(255,255,255,.06);border-color:var(--border);color:var(--muted)}
+.member-info{flex:1;min-width:0}
+.member-name{font-size:13px;font-weight:600}
+.member-meta{font-size:10px;color:var(--muted);margin-top:2px}
+.member-role-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;border:1px solid;flex-shrink:0;white-space:nowrap}
+.role-owner{background:rgba(255,90,0,.15);border-color:rgba(255,90,0,.4);color:var(--orange)}
+.role-commander{background:rgba(30,136,229,.15);border-color:rgba(30,136,229,.4);color:var(--blue2)}
+.role-admin{background:rgba(0,200,83,.1);border-color:rgba(0,200,83,.3);color:var(--green)}
+.role-member{background:rgba(255,255,255,.05);border-color:var(--border);color:var(--muted)}
+.add-member-section{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);padding:14px;margin-bottom:14px}
+.add-member-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--orange);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.btn-green{padding:11px 14px;border:1.5px solid var(--green);border-radius:var(--rs);background:rgba(0,200,83,.1);color:var(--green);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s}
+.btn-red-outline{padding:7px 12px;border:1.5px solid rgba(255,23,68,.3);border-radius:var(--rs);background:rgba(255,23,68,.08);color:var(--red);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;flex-shrink:0}
+
+/* ── ADMIN ── */
+#adminView{padding:14px}
+.admin-banner{background:linear-gradient(135deg,#1a0a00,#3a1500);border:1px solid rgba(255,90,0,.3);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.admin-banner h2{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--orange)}
+.admin-banner p{font-size:12px;color:var(--muted);margin-top:3px}
+.admin-tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px}
+.admin-tabs::-webkit-scrollbar{display:none}
+.atab{flex-shrink:0;padding:8px 14px;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .15s}
+.atab.active{border-color:var(--orange);color:var(--orange);background:rgba(255,90,0,.1)}
+.admin-section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.admin-section-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
+.stat-row:last-child{border-bottom:none}
+.stat-val{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--orange)}
+.stat-val.green{color:var(--green)}
+.stat-val.red{color:var(--red)}
+.stat-val.yellow{color:var(--yellow)}
+.reset-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:8px}
+.btn-reset{padding:11px;border:1.5px solid rgba(255,90,0,.4);border-radius:var(--rs);background:rgba(255,90,0,.08);color:var(--orange);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s}
+.btn-reset-danger{width:100%;padding:12px;border:1.5px solid var(--red);border-radius:var(--rs);background:rgba(255,23,68,.1);color:var(--red);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:all .15s;margin-top:6px}
+.btn-print{width:100%;padding:12px;border:1.5px solid var(--blue2);border-radius:var(--rs);background:rgba(30,136,229,.1);color:var(--blue2);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .15s}
+.audit-entry{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;margin-bottom:6px}
+.audit-entry-top{display:flex;align-items:center;gap:8px}
+.audit-entry-name{font-size:12px;font-weight:600;flex:1}
+.audit-entry-time{font-size:10px;color:var(--muted)}
+.audit-entry-detail{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* ── MODAL ── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:flex-end;justify-content:center}
+.modal-backdrop.hidden{display:none}
+.modal{background:var(--card);border:1px solid var(--border2);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:500px;max-height:88vh;overflow-y:auto}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;margin-bottom:14px;color:var(--orange)}
+.modal-btns{display:flex;gap:8px;margin-top:14px}
+.modal-btn{flex:1;padding:12px;border:none;border-radius:var(--rs);font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .15s}
+.modal-btn.cancel{background:rgba(255,255,255,.08);color:var(--muted)}
+.modal-btn.confirm{background:var(--orange);color:#fff}
+.modal-btn.green{background:var(--green);color:#0B1F3A}
+.modal-btn.danger{background:var(--red);color:#fff}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--steel);color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;transition:transform .3s;z-index:9999;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── EXPIRY WARNING ── */
+.expiry-warn{background:rgba(255,143,0,.08);border:1px solid rgba(255,143,0,.25);border-radius:var(--rs);padding:6px 10px;font-size:11px;color:var(--amber);margin-top:6px;display:flex;align-items:center;gap:6px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-badge">🏪</div>
+      <div>
+        <h1>CESSNOCK CITY UNIT</h1>
+        <p>NSW SES — Stores &amp; Inventory System</p>
+        <span class="login-app-tag">STORES APP</span>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="fwrap"><div class="flabel">First Name</div>
+      <input class="finput" id="loginName" type="text" placeholder="First name only" autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+    <div class="fwrap"><div class="flabel">MID</div>
+      <input class="finput" id="loginPin" type="tel" placeholder="Your member number" inputmode="numeric">
+    </div>
+    <div class="login-hint"><b>Stores App:</b> Manage station inventory, consumables, PPE, and equipment stock levels.</div>
+    <button class="btn-primary" onclick="doLogin()">SIGN IN</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="screen hidden" id="appScreen">
+  <div class="topbar">
+    <button class="btn-back" id="backBtn" onclick="goBack()" style="display:none">◀ Back</button>
+    <div class="topbar-title" id="topTitle">STORES</div>
+    <button class="btn-topicon orange show" id="adminBtn" onclick="showAdmin()" style="display:none">⚙ Admin</button>
+    <button class="btn-topicon green-btn" id="membersBtn" onclick="showMembers()" style="display:none">👥 Members</button>
+    <button class="btn-topicon show" id="printBtn" onclick="doPrint()" style="display:none">🖨 Print</button>
+    <button class="btn-logout" onclick="doLogout()">Logout</button>
+  </div>
+  <div class="content">
+    <div id="dashView"></div>
+    <div id="invView" style="display:none"></div>
+    <div id="membersView" style="display:none"></div>
+    <div id="adminView" style="display:none"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop hidden" id="modalBackdrop">
+  <div class="modal" id="modalBox">
+    <div class="modal-title" id="modalTitle"></div>
+    <div id="modalBody"></div>
+    <div class="modal-btns" id="modalBtns"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  MEMBERS
+// ═══════════════════════════════════════════════════════════════
+var DEFAULT_MEMBERS=[
+  {first:"Adam",last:"Bergan",id:"40060000"},
+  {first:"Alessandro",last:"Cigola",id:"40062197"},
+  {first:"Alisha",last:"Moore",id:"40042285"},
+  {first:"Alyssa",last:"Mccullum",id:"40061836"},
+  {first:"Amber",last:"Deakin",id:"40061155"},
+  {first:"Beata",last:"Emig",id:"40061741"},
+  {first:"Beau",last:"Jarman",id:"40049705"},
+  {first:"Belinda",last:"Lewis",id:"40051888"},
+  {first:"Brad",last:"Aldis",id:"40064160"},
+  {first:"Brenton",last:"Tumbers",id:"40054526"},
+  {first:"Brian",last:"Martin",id:"40061561"},
+  {first:"Brie",last:"Adams",id:"40032547"},
+  {first:"Brittney",last:"Adam",id:"40062194"},
+  {first:"Brodie",last:"Cowling",id:"40049803"},
+  {first:"Casie",last:"Metz",id:"40057003"},
+  {first:"Christopher",last:"Farrell",id:"40024170"},
+  {first:"Daniel",last:"Whittemore",id:"40062220"},
+  {first:"Daniel",last:"Liebig",id:"40051729"},
+  {first:"David",last:"Soden",id:"40062835"},
+  {first:"Elijah",last:"Field",id:"40063701"},
+  {first:"Ellen",last:"Hide",id:"40059402"},
+  {first:"Evan",last:"Lawson",id:"40049708"},
+  {first:"Geoffery",last:"Miller",id:"40051709"},
+  {first:"Gerard",last:"Healey",id:"40055122"},
+  {first:"Helen",last:"Wieckhorst",id:"40062681"},
+  {first:"Jade",last:"Griffiths",id:"40051976"},
+  {first:"James",last:"Norris",id:"40052202"},
+  {first:"Jamie",last:"Phillips",id:"40061817"},
+  {first:"Jason",last:"Trew",id:"40052207"},
+  {first:"Jay",last:"Delerentes",id:"40061995"},
+  {first:"Jayden",last:"Brown",id:"40062072"},
+  {first:"Jeffrey",last:"Irwin",id:"40024716"},
+  {first:"Jennifer",last:"Ehmsen",id:"40044693",commander:true},
+  {first:"Jody",last:"Whitson",id:"40056064"},
+  {first:"John",last:"Parsons",id:"40061610"},
+  {first:"John",last:"Ward",id:"40017426"},
+  {first:"John",last:"Schroeder",id:"40054994"},
+  {first:"Jonathan",last:"Childs",id:"40033005"},
+  {first:"Jonathon",last:"Hart",id:"40061774",role:"admin_ops"},
+  {first:"Joshua",last:"Walton",id:"40062081"},
+  {first:"Kailan",last:"O'connor",id:"40055048"},
+  {first:"Kanak",last:"Datar",id:"40063230"},
+  {first:"Katie",last:"Wright",id:"40050898"},
+  {first:"Katie",last:"Nelson",id:"40037467"},
+  {first:"Kile",last:"Nicholas",id:"40007032"},
+  {first:"Larna",last:"Smith",id:"40062207"},
+  {first:"Liam",last:"Mears",id:"40049706"},
+  {first:"Liam",last:"Emig",id:"40064593"},
+  {first:"Lindsay",last:"Bawden",id:"40055691"},
+  {first:"Luke",last:"Pitkin",id:"40059525"},
+  {first:"Maigan",last:"Ward",id:"40023951"},
+  {first:"Mark",last:"Peters",id:"40018439"},
+  {first:"Mark",last:"Bradbury",id:"40061796"},
+  {first:"Mark",last:"Mcdonald Sloan",id:"40047413"},
+  {first:"Matilda",last:"Grant (Matt)",id:"40063226"},
+  {first:"Jennifer",last:"Medema",id:"40064947"},
+  {first:"Megan",last:"Cameron",id:"40059503"},
+  {first:"Michael",last:"Metz",id:"40061199"},
+  {first:"Michael",last:"Pitkin",id:"40007654"},
+  {first:"Mitchell",last:"Grant",id:"40057742"},
+  {first:"Natasha",last:"Norris",id:"40052203"},
+  {first:"Paul",last:"Hampton",id:"40054171"},
+  {first:"Paul",last:"Auriac",id:"40058959"},
+  {first:"Renai",last:"Mcgauley",id:"40058251"},
+  {first:"Renea",last:"Morrow",id:"40062581"},
+  {first:"Renn",last:"Ralphs",id:"40056952"},
+  {first:"Ryan",last:"Flissinger",id:"40062812"},
+  {first:"Sarah",last:"Butler (Sally)",id:"40025907"},
+  {first:"Seth",last:"Atkinson",id:"40063338"},
+  {first:"Shaun",last:"Thorley",id:"40035234"},
+  {first:"Stephen",last:"Hicks",id:"40061835"},
+  {first:"Stuart",last:"Stoker",id:"40058184"},
+  {first:"Tara",last:"Wood-Bradley",id:"40061925"},
+  {first:"Tarun",last:"Mitchell",id:"40051992"},
+  {first:"Toby",last:"Turpin",id:"40059401"},
+  {first:"Tracey",last:"Miles",id:"40062087"},
+  {first:"Xander",last:"Spurway",id:"40062299"},
+  {first:"Zoe",last:"Capararo",id:"40061906"}
+];
+
+var LOCKED_OWNER_ID='40055691'; // Lindsay Bawden
+var COMMANDER_ID='40044693';    // Jennifer Ehmsen
+var ADMIN_INV_ID='40057003';    // Casie Metz — Inventory Admin
+var ADMIN_MBR_ID='40061741';    // Beata Emig — Membership Admin
+var ADMIN_OPS_ID='40061774';    // Jonathon Hart — Ops Admin
+
+// ═══════════════════════════════════════════════════════════════
+//  ROLE SYSTEM
+// ═══════════════════════════════════════════════════════════════
+function roleOf(m){
+  if(!m) return 'member';
+  if(m.id===LOCKED_OWNER_ID) return 'owner';
+  if(m.id===COMMANDER_ID||m.commander) return 'commander';
+  if(m.id===ADMIN_OPS_ID||m.role==='admin_ops') return 'admin_ops';
+  if(m.id===ADMIN_MBR_ID||m.role==='admin_membership') return 'admin_membership';
+  if(m.id===ADMIN_INV_ID||m.role==='admin_inventory') return 'admin_inventory';
+  return 'member';
+}
+function roleLabel(m){
+  var r=roleOf(m);
+  if(r==='owner') return 'Owner';
+  if(r==='commander') return 'Commander';
+  if(r==='admin_ops') return 'Admin — Ops';
+  if(r==='admin_membership') return 'Admin — Membership';
+  if(r==='admin_inventory') return 'Admin — Inventory';
+  return 'Member';
+}
+function roleCss(m){
+  var r=roleOf(m);
+  if(r==='owner') return 'role-owner';
+  if(r==='commander') return 'role-commander';
+  if(r==='admin_ops'||r==='admin_membership'||r==='admin_inventory') return 'role-admin';
+  return 'role-member';
+}
+function hasRole(roles){ return roles.indexOf(roleOf(user))>=0; }
+var ALL_ADMINS=['owner','commander','admin_ops','admin_membership','admin_inventory'];
+function canAdmin(){ return hasRole(ALL_ADMINS); }
+function canManageInventory(){ return hasRole(['owner','commander','admin_inventory']); }
+function canManageMembers(){ return hasRole(['owner','commander','admin_membership']); }
+function canManageAdmins(){ return hasRole(['owner','commander']); }
+function canPrint(){ return hasRole(ALL_ADMINS); }
+function canDeleteInv(){ return hasRole(['owner','commander','admin_inventory']); }
+function canWriteInv(){ return !!user; } // all logged-in can adjust qty & add
+function canDeleteMember(m){ return hasRole(['owner','commander'])&&roleOf(m)!=='owner'; }
+
+// ═══════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════
+var user=null,MEMBERS=[],inventory=[],auditLog=[];
+var invFilter='all',invSearch='',invExpanded={};
+var navStack=[],adminTab='overview',memberSearch='';
+
+// ═══════════════════════════════════════════════════════════════
+//  PERSIST
+// ═══════════════════════════════════════════════════════════════
+function loadAll(){
+  try{MEMBERS=JSON.parse(localStorage.getItem('ses_stores_members'))||cloneMembers();}catch(e){MEMBERS=cloneMembers();}
+  try{inventory=JSON.parse(localStorage.getItem('ses_stores_inventory'))||[];}catch(e){inventory=[];}
+  try{auditLog=JSON.parse(localStorage.getItem('ses_stores_audit'))||[];}catch(e){auditLog=[];}
+  enforceInvariants();
+}
+function saveAll(){
+  try{
+    localStorage.setItem('ses_stores_members',JSON.stringify(MEMBERS));
+    localStorage.setItem('ses_stores_inventory',JSON.stringify(inventory));
+    localStorage.setItem('ses_stores_audit',JSON.stringify(auditLog.slice(-200)));
+  }catch(e){}
+}
+function cloneMembers(){
+  return DEFAULT_MEMBERS.map(function(m){var c={};for(var k in m)if(m.hasOwnProperty(k))c[k]=m[k];return c;});
+}
+function enforceInvariants(){
+  if(!MEMBERS.find(function(m){return m.id===LOCKED_OWNER_ID;}))
+    MEMBERS.push({first:'Lindsay',last:'Bawden',id:LOCKED_OWNER_ID});
+  var jen=MEMBERS.find(function(m){return m.id===COMMANDER_ID;});
+  if(jen) jen.commander=true;
+  var seeds=[
+    {id:ADMIN_INV_ID,role:'admin_inventory'},
+    {id:ADMIN_MBR_ID,role:'admin_membership'},
+    {id:ADMIN_OPS_ID,role:'admin_ops'}
+  ];
+  seeds.forEach(function(s){
+    var f=MEMBERS.find(function(m){return m.id===s.id;});
+    if(f&&!f.role) f.role=s.role;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  AUDIT
+// ═══════════════════════════════════════════════════════════════
+function audit(action,detail){
+  auditLog.push({
+    at:new Date().toISOString(),
+    by:user?user.first+' '+user.last:'System',
+    action:action,
+    detail:detail
+  });
+  saveAll();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════════════════════════
+function doLogin(){
+  var name=document.getElementById('loginName').value.trim();
+  var pin=document.getElementById('loginPin').value.trim();
+  var err=document.getElementById('loginErr');
+  err.textContent='';
+  if(!name||!pin){err.textContent='Please enter your first name and MID.';return;}
+  var nl=name.toLowerCase();
+  var m=MEMBERS.find(function(m){return m.first.toLowerCase()===nl&&m.id===pin;});
+  if(!m){err.textContent='First name or MID not recognised.';document.getElementById('loginPin').value='';return;}
+  user=m;
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appScreen').classList.remove('hidden');
+  if(canAdmin()) document.getElementById('adminBtn').style.display='flex';
+  if(canManageMembers()||canManageAdmins()) document.getElementById('membersBtn').style.display='flex';
+  if(canPrint()) document.getElementById('printBtn').style.display='flex';
+  navStack=['dash'];
+  showDash();
+}
+function doLogout(){
+  user=null;
+  ['loginName','loginPin'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('loginErr').textContent='';
+  ['adminBtn','membersBtn','printBtn'].forEach(function(id){document.getElementById(id).style.display='none';});
+  document.getElementById('appScreen').classList.add('hidden');
+  document.getElementById('loginScreen').classList.remove('hidden');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  NAV
+// ═══════════════════════════════════════════════════════════════
+var VIEWS=['dashView','invView','membersView','adminView'];
+function showView(id){
+  VIEWS.forEach(function(v){document.getElementById(v).style.display=v===id?'block':'none';});
+  document.querySelector('.content').scrollTop=0;
+}
+function goBack(){
+  navStack.pop();
+  var top=navStack[navStack.length-1]||'dash';
+  if(top==='dash') showDash(false);
+  else if(top==='inv') showInv(false);
+  else if(top==='members') showMembers(false);
+  else if(top==='admin') showAdmin(false);
+  else showDash(false);
+}
+function updateTopbar(title,showBack){
+  document.getElementById('topTitle').textContent=title;
+  document.getElementById('backBtn').style.display=showBack?'block':'none';
+}
+function showDash(push){
+  if(push!==false) navStack=['dash'];
+  updateTopbar('CESSNOCK CITY STORES',false);
+  renderDash();
+  showView('dashView');
+}
+function showInv(push){
+  if(push!==false) navStack.push('inv');
+  updateTopbar('STOCK REGISTER',true);
+  renderInv();
+  showView('invView');
+}
+function showMembers(push){
+  if(push!==false) navStack.push('members');
+  updateTopbar('MEMBERS',true);
+  renderMembers();
+  showView('membersView');
+}
+function showAdmin(push){
+  if(!canAdmin()){showToast('Access restricted');return;}
+  if(push!==false) navStack.push('admin');
+  updateTopbar('ADMIN PANEL',true);
+  renderAdmin();
+  showView('adminView');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INVENTORY HELPERS
+// ═══════════════════════════════════════════════════════════════
+var INV_CLASSES=[
+  {key:'consumable',label:'Consumable',icon:'📦'},
+  {key:'ppe',label:'PPE',icon:'🦺'},
+  {key:'firstaid',label:'First Aid',icon:'🩺'},
+  {key:'tool',label:'Tool',icon:'🔧'},
+  {key:'rescue',label:'Rescue Gear',icon:'🏊'},
+  {key:'equipment',label:'Equipment',icon:'⚙️'},
+  {key:'comms',label:'Comms / IT',icon:'📡'},
+  {key:'vehicle',label:'Vehicle Asset',icon:'🚒'},
+  {key:'other',label:'Other',icon:'⭐'}
+];
+var INV_LOCATIONS=[
+  'Station — Main Bay',
+  'Station — Store Room',
+  'Station — Training Room',
+  'Station — Office',
+  'Station — External Store',
+  'CES31 — Crew Cabin',
+  'CES31 — Locker 1','CES31 — Locker 2','CES31 — Locker 3',
+  'CES31 — Locker 4','CES31 — Locker 5','CES31 — Locker 6',
+  'CES31 — Locker 7','CES31 — Locker 8','CES31 — Roof',
+  'CES56 — Vehicle Equipment',
+  'CES656 — Locker 2','CES656 — Locker 3','CES656 — Locker 4',
+  'CES656 — Locker 5','CES656 — Locker 6','CES656 — Locker 7',
+  'CES656 — Locker 8','CES656 — Roof',
+  'FLT56','FloodBoat','General Purpose Trailer',
+  'Other / Custom'
+];
+function classInfo(key){return INV_CLASSES.find(function(c){return c.key===key;})||{key:'other',label:'Other',icon:'⭐'};}
+function genId(){return 'itm_'+Date.now()+'_'+Math.floor(Math.random()*9999);}
+
+function computeStatus(item){
+  // Expiry overrides stock status
+  if(item.expiryDate){
+    var days=Math.floor((new Date(item.expiryDate)-new Date())/(1000*60*60*24));
+    if(days<0) return 'critical';
+    if(days<=60) return 'expiring';
+  }
+  if(item.qtyExpected>0){
+    var ratio=item.qtyOnHand/item.qtyExpected;
+    if(item.qtyOnHand<=0) return 'critical';
+    if(item.qtyMin!=null&&item.qtyOnHand<=item.qtyMin) return 'low';
+    if(ratio<0.4) return 'low';
+    return 'good';
+  }
+  return item.status||'unknown';
+}
+
+function statusLabel(s){
+  return {good:'OK / Full',low:'Low Stock',critical:'Critical / Empty',expiring:'Expiring Soon',unknown:'Not Checked',na:'N/A'}[s]||s;
+}
+
+function daysToExpiry(dateStr){
+  if(!dateStr) return null;
+  return Math.floor((new Date(dateStr)-new Date())/(1000*60*60*24));
+}
+
+function getAlerts(){
+  var alerts=[];
+  inventory.forEach(function(item){
+    var s=computeStatus(item);
+    if(s==='critical') alerts.push({item:item,type:'critical',msg:'Critical / Empty'});
+    else if(s==='low') alerts.push({item:item,type:'low',msg:'Low Stock'});
+    else if(s==='expiring'){
+      var d=daysToExpiry(item.expiryDate);
+      alerts.push({item:item,type:'expiring',msg:'Expires in '+d+' day'+(d===1?'':'s')});
+    }
+  });
+  return alerts;
+}
+
+function filteredInventory(){
+  var q=(invSearch||'').toLowerCase();
+  return inventory.filter(function(item){
+    var s=computeStatus(item);
+    var mf=invFilter==='all'||invFilter===item.classification||invFilter===s||
+      (invFilter==='alerts'&&(s==='critical'||s==='low'||s==='expiring'));
+    if(!mf) return false;
+    if(!q) return true;
+    return (item.name||'').toLowerCase().indexOf(q)>=0||
+           (item.location||'').toLowerCase().indexOf(q)>=0||
+           (item.matNo||'').toLowerCase().indexOf(q)>=0||
+           (item.sublocation||'').toLowerCase().indexOf(q)>=0;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDER DASHBOARD
+// ═══════════════════════════════════════════════════════════════
+function renderDash(){
+  var total=inventory.length;
+  var good=0,low=0,crit=0,unk=0;
+  inventory.forEach(function(item){
+    var s=computeStatus(item);
+    if(s==='good') good++;
+    else if(s==='low'||s==='expiring') low++;
+    else if(s==='critical') crit++;
+    else unk++;
+  });
+  var alerts=getAlerts();
+  var today=new Date().toLocaleDateString('en-AU');
+  var r=roleOf(user);
+  var roleChipCls=r==='owner'?'owner':r==='commander'?'commander':(r.indexOf('admin')>=0?'admin':'member');
+
+  // Quick action buttons
+  var qbtns='';
+  qbtns+='<div class="qbtn green-accent" onclick="showInv()"><div class="qbtn-icon">📋</div><div class="qbtn-label">Stock Register</div><div class="qbtn-sub">'+total+' items tracked</div></div>';
+  qbtns+='<div class="qbtn orange-accent" onclick="openAddModal()"><div class="qbtn-icon">➕</div><div class="qbtn-label">Add Stock Item</div><div class="qbtn-sub">Record new item</div></div>';
+  if(canManageMembers()||canManageAdmins()){
+    qbtns+='<div class="qbtn blue-accent" onclick="showMembers()"><div class="qbtn-icon">👥</div><div class="qbtn-label">Members</div><div class="qbtn-sub">'+MEMBERS.length+' registered</div></div>';
+  }
+  if(canPrint()){
+    qbtns+='<div class="qbtn red-accent" onclick="doPrint()"><div class="qbtn-icon">🖨</div><div class="qbtn-label">Print Report</div><div class="qbtn-sub">Stocktake / register</div></div>';
+  }
+
+  // Alert section
+  var alertHtml='';
+  if(alerts.length>0){
+    var rows=alerts.slice(0,8).map(function(a){
+      var dotCls=a.type==='critical'?'red':(a.type==='expiring'?'yellow':'yellow');
+      var bdgCls=a.type==='critical'?'crit':(a.type==='expiring'?'expiry':'low');
+      return '<div class="alert-row">'+
+        '<div class="alert-dot '+dotCls+'"></div>'+
+        '<div class="alert-info">'+
+          '<div class="alert-name">'+esc(a.item.name)+'</div>'+
+          '<div class="alert-meta">'+(a.item.location||'No location')+(a.item.sublocation?' · '+a.item.sublocation:'')+'</div>'+
+        '</div>'+
+        '<span class="alert-badge '+bdgCls+'">'+a.msg+'</span>'+
+      '</div>';
+    }).join('');
+    if(alerts.length>8) rows+='<div style="font-size:11px;color:var(--muted);padding-top:6px;text-align:center">…and '+(alerts.length-8)+' more. View Stock Register.</div>';
+    alertHtml='<div class="alert-box"><div class="alert-box-title">⚠ '+alerts.length+' Alert'+(alerts.length===1?'':'s')+' Requiring Attention</div>'+rows+'</div>';
+  }
+
+  document.getElementById('dashView').innerHTML=
+    '<div class="dash-banner">'+
+      '<h2>🏪 Stores &amp; Inventory</h2>'+
+      '<p>NSW SES · Cessnock City Unit · '+today+'</p>'+
+      '<span class="dash-role-chip '+roleChipCls+'">'+roleLabel(user)+'</span>'+
+    '</div>'+
+    '<div class="summary-grid">'+
+      '<div class="sum-card ok"><div class="n">'+good+'</div><div class="l">OK</div></div>'+
+      '<div class="sum-card low"><div class="n">'+low+'</div><div class="l">Low</div></div>'+
+      '<div class="sum-card crit"><div class="n">'+crit+'</div><div class="l">Critical</div></div>'+
+      '<div class="sum-card unk"><div class="n">'+unk+'</div><div class="l">Unchecked</div></div>'+
+    '</div>'+
+    alertHtml+
+    '<div class="sec-label">Quick Actions</div>'+
+    '<div class="dash-quick-btns">'+qbtns+'</div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDER INVENTORY
+// ═══════════════════════════════════════════════════════════════
+function renderInv(){
+  var total=inventory.length;
+  var alerts=getAlerts();
+
+  var filters=[
+    {key:'all',label:'All ('+total+')'},
+    {key:'alerts',label:'⚠ Alerts ('+alerts.length+')',cls:alerts.length>0?'danger':''},
+    {key:'good',label:'✓ OK'},
+    {key:'low',label:'↓ Low',cls:'warn'},
+    {key:'critical',label:'✗ Critical',cls:'danger'},
+    {key:'expiring',label:'⏱ Expiring'},
+    {key:'consumable',label:'Consumable'},
+    {key:'ppe',label:'PPE'},
+    {key:'firstaid',label:'First Aid'},
+    {key:'tool',label:'Tool'},
+    {key:'rescue',label:'Rescue'},
+    {key:'equipment',label:'Equipment'},
+    {key:'comms',label:'Comms'},
+    {key:'vehicle',label:'Vehicle'},
+    {key:'other',label:'Other'}
+  ];
+  var filterHtml=filters.map(function(f){
+    var active=invFilter===f.key?'active':'';
+    var cls=f.cls||'';
+    return '<button class="fbtn '+active+' '+cls+'" onclick="setInvFilter(\''+f.key+'\')">'+f.label+'</button>';
+  }).join('');
+
+  var items=filteredInventory();
+  var listHtml=items.length===0
+    ?'<div class="inv-empty"><div class="inv-empty-icon">'+(total===0?'📋':'🔍')+'</div><p>'+(total===0?'No stock items yet.<br>Tap <b>+ Add Stock Item</b> to get started.':'No items match your filter or search.')+'</p></div>'
+    :items.map(renderInvCard).join('');
+
+  document.getElementById('invView').innerHTML=
+    '<div class="inv-banner"><h2>📋 Stock Register</h2><p>Cessnock City Unit · '+new Date().toLocaleDateString('en-AU')+'</p></div>'+
+    '<div class="inv-search-wrap"><span class="inv-search-icon">🔍</span>'+
+      '<input class="inv-search" id="invSearch" placeholder="Search name, location, material no…" value="'+esc(invSearch)+'" oninput="setInvSearch(this.value)">'+
+    '</div>'+
+    '<div class="filter-row">'+filterHtml+'</div>'+
+    '<button class="inv-add-btn" onclick="openAddModal()">➕ Add Stock Item</button>'+
+    '<div class="inv-list">'+listHtml+'</div>';
+}
+
+function renderInvCard(item){
+  var s=computeStatus(item);
+  var ci=classInfo(item.classification);
+  var exp=invExpanded[item.id];
+  var days=daysToExpiry(item.expiryDate);
+
+  var qtyColor='var(--text)';
+  if(s==='critical') qtyColor='var(--red)';
+  else if(s==='low') qtyColor='var(--yellow)';
+  else if(s==='expiring') qtyColor='var(--amber)';
+  else if(s==='good') qtyColor='var(--green)';
+
+  var locHtml='';
+  if(item.location) locHtml+='<span>'+esc(item.location)+'</span>';
+  if(item.sublocation) locHtml+='<span>'+esc(item.sublocation)+'</span>';
+
+  var expiryWarn='';
+  if(item.expiryDate){
+    var dStr=days<0?'EXPIRED '+(Math.abs(days))+' days ago':(days===0?'Expires TODAY':'Expires in '+days+' day'+(days===1?'':'s'));
+    var warnCls=days<0||days<=14?'danger':days<=60?'warn':'';
+    expiryWarn='<div class="expiry-warn">⏱ '+dStr+'</div>';
+    if(warnCls==='danger') expiryWarn=expiryWarn.replace('expiry-warn','expiry-warn" style="background:rgba(255,23,68,.08);border-color:rgba(255,23,68,.3);color:var(--red)');
+  }
+
+  var detailHtml='';
+  if(exp){
+    var detailRows=[
+      ['Material No.',item.matNo||'—'],
+      ['Serial / S/N',item.serialNo||'—'],
+      ['Min Qty',item.qtyMin!=null?item.qtyMin:'—'],
+      ['Expected Qty',item.qtyExpected!=null&&item.qtyExpected>0?item.qtyExpected:'—'],
+      ['Expiry Date',item.expiryDate||'—'],
+      ['Status',statusLabel(s)],
+      ['Last Updated',item.lastUpdated?new Date(item.lastUpdated).toLocaleString('en-AU'):'—'],
+      ['Updated By',item.lastUpdatedBy||'—']
+    ];
+    detailHtml='<div class="inv-detail open">'+
+      detailRows.map(function(r){
+        var valCls='';
+        if(r[0]==='Status'&&(s==='critical'||days<0)) valCls=' class="detail-val danger"';
+        else if(r[0]==='Status'&&(s==='low'||s==='expiring')) valCls=' class="detail-val warn"';
+        else valCls=' class="detail-val"';
+        return '<div class="detail-row"><span class="detail-key">'+r[0]+'</span><span'+valCls+'>'+esc(String(r[1]))+'</span></div>';
+      }).join('')+
+      (item.notes?'<div class="detail-notes">'+esc(item.notes)+'</div>':'')+
+      '<div class="detail-action-row">'+
+        '<button class="detail-btn edit" onclick="openEditModal(\''+item.id+'\')">✎ Edit</button>'+
+        (canDeleteInv()?'<button class="detail-btn danger" onclick="confirmDelete(\''+item.id+'\')">🗑 Delete</button>':'')+
+      '</div>'+
+    '</div>';
+  }
+
+  return '<div class="inv-card s-'+s+'" id="ivc-'+item.id+'">'+
+    '<div class="inv-card-top">'+
+      '<div class="inv-card-icon">'+ci.icon+'</div>'+
+      '<div class="inv-card-info">'+
+        '<div class="inv-card-name">'+esc(item.name)+'</div>'+
+        (locHtml?'<div class="inv-card-loc">'+locHtml+'</div>':'')+
+        expiryWarn+
+        '<div class="inv-badges">'+
+          '<span class="badge c-'+item.classification+'">'+ci.label+'</span>'+
+          '<span class="badge s-'+s+'">'+statusLabel(s)+'</span>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="inv-qty-row">'+
+      '<span class="inv-qty-label">Qty on hand</span>'+
+      '<div class="inv-qty-ctrl">'+
+        '<button class="qty-btn" onclick="adjustQty(\''+item.id+'\',-1)">−</button>'+
+        '<div class="qty-val" style="color:'+qtyColor+'">'+item.qtyOnHand+'</div>'+
+        '<button class="qty-btn" onclick="adjustQty(\''+item.id+'\',1)">+</button>'+
+      '</div>'+
+    '</div>'+
+    '<button class="inv-expand-btn" onclick="toggleExpand(\''+item.id+'\')">'+(exp?'▲ Less':'▼ Details & Edit')+'</button>'+
+    detailHtml+
+  '</div>';
+}
+
+function setInvFilter(f){invFilter=f;renderInv();}
+function setInvSearch(v){invSearch=v;renderInv();}
+function toggleExpand(id){invExpanded[id]=!invExpanded[id];renderInv();}
+
+function adjustQty(id,delta){
+  var item=inventory.find(function(i){return i.id===id;});
+  if(!item) return;
+  var prev=item.qtyOnHand;
+  item.qtyOnHand=Math.max(0,(item.qtyOnHand||0)+delta);
+  item.status=computeStatus(item);
+  item.lastUpdated=new Date().toISOString();
+  item.lastUpdatedBy=user.first+' '+user.last;
+  audit('QTY_ADJUST',item.name+': '+prev+' → '+item.qtyOnHand);
+  saveAll();
+  renderInv();
+  if(invExpanded[id]) invExpanded[id]=true;
+}
+
+function confirmDelete(id){
+  if(!canDeleteInv()){showToast('Inventory Admin or above required');return;}
+  var item=inventory.find(function(i){return i.id===id;});
+  if(!item) return;
+  openModal('Delete Stock Item',
+    '<p style="font-size:14px;color:var(--muted);line-height:1.7">Permanently delete <b style="color:var(--text)">'+esc(item.name)+'</b>?<br>This cannot be undone.</p>',
+    [{label:'Cancel',cls:'cancel',fn:'closeModal()'},
+     {label:'Delete',cls:'danger',fn:'deleteItem(\''+id+'\')'}]);
+}
+function deleteItem(id){
+  if(!canDeleteInv()){closeModal();showToast('Permission denied');return;}
+  var item=inventory.find(function(i){return i.id===id;});
+  if(item) audit('DELETE',item.name);
+  inventory=inventory.filter(function(i){return i.id!==id;});
+  delete invExpanded[id];
+  saveAll(); closeModal();
+  showToast('✓ Deleted');
+  renderInv();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ADD / EDIT FORM
+// ═══════════════════════════════════════════════════════════════
+function itemFormHtml(item){
+  item=item||{};
+  var classOpts=INV_CLASSES.map(function(c){
+    return '<option value="'+c.key+'"'+(item.classification===c.key?' selected':'')+'>'+c.icon+' '+c.label+'</option>';
+  }).join('');
+  var locOpts='<option value="">— Select or type below —</option>'+INV_LOCATIONS.map(function(l){
+    return '<option value="'+esc(l)+'"'+(item.location===l?' selected':'')+'>'+esc(l)+'</option>';
+  }).join('');
+  return '<div class="fwrap"><div class="flabel">Item Name *</div>'+
+    '<input class="finput" id="if-name" placeholder="e.g. Nitrile Gloves Large (Box)" value="'+esc(item.name||'')+'"></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'+
+      '<div><div class="flabel">Classification *</div><select class="fselect" id="if-class">'+classOpts+'</select></div>'+
+      '<div><div class="flabel">Qty on Hand</div><input class="finput" id="if-qty" type="number" min="0" value="'+(item.qtyOnHand!=null?item.qtyOnHand:0)+'"></div>'+
+    '</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'+
+      '<div><div class="flabel">Min Qty (alert)</div><input class="finput" id="if-min" type="number" min="0" placeholder="e.g. 2" value="'+(item.qtyMin!=null?item.qtyMin:'')+'"></div>'+
+      '<div><div class="flabel">Expected Qty</div><input class="finput" id="if-exp" type="number" min="0" placeholder="Full stock" value="'+(item.qtyExpected!=null&&item.qtyExpected>0?item.qtyExpected:'')+'"></div>'+
+    '</div>'+
+    '<div class="fwrap"><div class="flabel">Primary Location</div>'+
+      '<select class="fselect" id="if-loc-sel" style="margin-bottom:6px" onchange="locSelChange()">'+locOpts+'</select>'+
+      '<input class="finput" id="if-loc" placeholder="Or type custom location…" value="'+esc(item.location||'')+'"></div>'+
+    '<div class="fwrap"><div class="flabel">Sub-location / Compartment</div>'+
+      '<input class="finput" id="if-subloc" placeholder="e.g. Shelf B, Top Drawer" value="'+esc(item.sublocation||'')+'"></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'+
+      '<div><div class="flabel">Material No.</div><input class="finput" id="if-mat" placeholder="e.g. 300171" value="'+esc(item.matNo||'')+'"></div>'+
+      '<div><div class="flabel">Serial / S/N</div><input class="finput" id="if-sn" placeholder="Optional" value="'+esc(item.serialNo||'')+'"></div>'+
+    '</div>'+
+    '<div class="fwrap"><div class="flabel">Expiry Date (if applicable)</div>'+
+      '<input class="finput" id="if-expiry" type="date" value="'+(item.expiryDate||'')+'"></div>'+
+    '<div class="fwrap"><div class="flabel">Notes</div>'+
+      '<textarea class="finput" id="if-notes" rows="2" placeholder="Condition, storage requirements, batch info…" style="resize:none;min-height:64px">'+esc(item.notes||'')+'</textarea></div>';
+}
+
+function locSelChange(){
+  var sel=document.getElementById('if-loc-sel');
+  if(sel&&sel.value){var inp=document.getElementById('if-loc');if(inp)inp.value=sel.value;}
+}
+
+function readForm(existingId){
+  var name=(document.getElementById('if-name').value||'').trim();
+  var classification=document.getElementById('if-class').value;
+  var loc=(document.getElementById('if-loc').value||'').trim();
+  var subloc=(document.getElementById('if-subloc').value||'').trim();
+  var qtyRaw=document.getElementById('if-qty').value;
+  var minRaw=document.getElementById('if-min').value;
+  var expRaw=document.getElementById('if-exp').value;
+  var mat=(document.getElementById('if-mat').value||'').trim();
+  var sn=(document.getElementById('if-sn').value||'').trim();
+  var expiry=(document.getElementById('if-expiry').value||'').trim();
+  var notes=(document.getElementById('if-notes').value||'').trim();
+  if(!name){showToast('Item name required');return null;}
+  var qty=qtyRaw===''?0:parseInt(qtyRaw,10);
+  var min=minRaw===''?null:parseInt(minRaw,10);
+  var exp=expRaw===''?null:parseInt(expRaw,10);
+  if(isNaN(qty)||qty<0){showToast('Qty must be 0 or more');return null;}
+  var item={
+    id:existingId||genId(),
+    name:name,classification:classification,
+    location:loc,sublocation:subloc,
+    qtyOnHand:qty,qtyMin:min,qtyExpected:exp,
+    matNo:mat,serialNo:sn,expiryDate:expiry||null,notes:notes,
+    lastUpdated:new Date().toISOString(),
+    lastUpdatedBy:user.first+' '+user.last
+  };
+  item.status=computeStatus(item);
+  return item;
+}
+
+function openAddModal(){
+  if(!canWriteInv()){showToast('Please log in');return;}
+  openModal('Add Stock Item',itemFormHtml({}),
+    [{label:'Cancel',cls:'cancel',fn:'closeModal()'},
+     {label:'Add Item',cls:'green',fn:'saveNewItem()'}]);
+}
+function openEditModal(id){
+  if(!canWriteInv()){showToast('Please log in');return;}
+  var item=inventory.find(function(i){return i.id===id;});
+  if(!item) return;
+  openModal('Edit Stock Item',itemFormHtml(item),
+    [{label:'Cancel',cls:'cancel',fn:'closeModal()'},
+     {label:'Save Changes',cls:'confirm',fn:'saveEditItem(\''+id+'\')'}]);
+}
+function saveNewItem(){
+  var item=readForm(null);
+  if(!item) return;
+  inventory.push(item);
+  audit('ADD',item.name+' (qty:'+item.qtyOnHand+')');
+  saveAll(); closeModal();
+  showToast('✓ Added: '+item.name);
+  invExpanded[item.id]=false;
+  renderInv();
+}
+function saveEditItem(id){
+  var item=readForm(id);
+  if(!item) return;
+  var idx=-1;
+  for(var i=0;i<inventory.length;i++){if(inventory[i].id===id){idx=i;break;}}
+  if(idx<0) return;
+  inventory[idx]=item;
+  audit('EDIT',item.name);
+  saveAll(); closeModal();
+  showToast('✓ Updated: '+item.name);
+  invExpanded[id]=true;
+  renderInv();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  MEMBERS
+// ═══════════════════════════════════════════════════════════════
+function renderMembers(){
+  var q=(memberSearch||'').toLowerCase();
+  var sorted=[].concat(MEMBERS).sort(function(a,b){return(a.first+a.last).localeCompare(b.first+b.last);});
+  var filtered=q?sorted.filter(function(m){
+    return (m.first+' '+m.last).toLowerCase().indexOf(q)>=0||m.id.indexOf(q)>=0;
+  }):sorted;
+
+  var memberRows=filtered.map(function(m){
+    var ri=MEMBERS.indexOf(m);
+    var r=roleOf(m);
+    var avatarCls=r==='owner'||r.indexOf('admin')>=0?'':r==='commander'?'cmd':'mbr';
+    var initials=m.first[0]+(m.last?m.last[0]:'');
+    var canDel=canDeleteMember(m)&&m.id!==user.id;
+    return '<div class="member-card">'+
+      '<div class="member-avatar '+avatarCls+'">'+initials.toUpperCase()+'</div>'+
+      '<div class="member-info">'+
+        '<div class="member-name">'+esc(m.first+' '+m.last)+'</div>'+
+        '<div class="member-meta">MID: '+m.id+'</div>'+
+      '</div>'+
+      '<span class="member-role-badge '+roleCss(m)+'">'+roleLabel(m)+'</span>'+
+      (canDel?'<button class="btn-red-outline" onclick="confirmRemoveMember('+ri+')">Remove</button>':'')+
+    '</div>';
+  }).join('');
+
+  var addSection='';
+  if(canManageMembers()){
+    var roleSelect=canManageAdmins()
+      ?'<div class="fwrap"><div class="flabel">Role</div><select class="fselect" id="mRole">'+
+        '<option value="member">Member</option>'+
+        '<option value="admin_ops">Admin — Ops</option>'+
+        '<option value="admin_membership">Admin — Membership</option>'+
+        '<option value="admin_inventory">Admin — Inventory</option>'+
+        '</select></div>'
+      :'<p style="font-size:11px;color:var(--muted);margin-bottom:8px">Only Owner/Commander can assign admin roles.</p><input type="hidden" id="mRole" value="member">';
+    addSection='<div class="add-member-section">'+
+      '<div class="add-member-title">Add New Member</div>'+
+      '<div class="form-row-2">'+
+        '<div><div class="flabel">First Name</div><input class="finput" id="mFirst" placeholder="First name"></div>'+
+        '<div><div class="flabel">Last Name</div><input class="finput" id="mLast" placeholder="Last name"></div>'+
+      '</div>'+
+      '<div class="fwrap"><div class="flabel">MID</div><input class="finput" id="mId" placeholder="e.g. 40012345" inputmode="numeric"></div>'+
+      roleSelect+
+      '<button class="btn-green" onclick="addMember()" style="width:100%">+ Add Member</button>'+
+    '</div>';
+  }
+
+  document.getElementById('membersView').innerHTML=
+    '<div class="members-banner"><h2>👥 Member Register</h2><p>'+MEMBERS.length+' members registered · Cessnock City Unit</p></div>'+
+    addSection+
+    '<div class="member-search-wrap"><span class="member-search-icon">🔍</span>'+
+      '<input class="member-search" id="memberSearchInput" placeholder="Search name or MID…" value="'+esc(memberSearch)+'" oninput="setMemberSearch(this.value)">'+
+    '</div>'+
+    '<div class="member-list">'+memberRows+'</div>';
+}
+
+function setMemberSearch(v){memberSearch=v;renderMembers();}
+
+function addMember(){
+  if(!canManageMembers()){showToast('Permission denied');return;}
+  var first=(document.getElementById('mFirst').value||'').trim();
+  var last=(document.getElementById('mLast').value||'').trim();
+  var id=(document.getElementById('mId').value||'').trim();
+  var role=document.getElementById('mRole').value||'member';
+  if(!first){showToast('First name required');return;}
+  if(!id){showToast('MID required');return;}
+  if(MEMBERS.find(function(m){return m.id===id;})){showToast('MID already exists');return;}
+  if(role!=='member'&&!canManageAdmins()){showToast('Only Owner/Commander can assign admin roles');return;}
+  var m={first:first,last:last,id:id};
+  if(role!=='member') m.role=role;
+  MEMBERS.push(m);
+  audit('ADD_MEMBER',first+' '+last+' ('+id+')');
+  saveAll(); showToast('✓ Added '+first+' '+last);
+  renderMembers();
+}
+
+function confirmRemoveMember(idx){
+  var m=MEMBERS[idx];
+  if(!m) return;
+  openModal('Remove Member',
+    '<p style="font-size:14px;color:var(--muted);line-height:1.7">Remove <b style="color:var(--text)">'+esc(m.first+' '+m.last)+'</b> (MID: '+m.id+')?<br>They will no longer be able to log in.</p>',
+    [{label:'Cancel',cls:'cancel',fn:'closeModal()'},
+     {label:'Remove',cls:'danger',fn:'removeMember('+idx+')'}]);
+}
+function removeMember(idx){
+  var m=MEMBERS[idx];
+  if(!m){closeModal();return;}
+  if(m.id===LOCKED_OWNER_ID){closeModal();showToast('Owner account is locked');return;}
+  if(!canDeleteMember(m)){closeModal();showToast('Only Owner/Commander can remove members');return;}
+  audit('REMOVE_MEMBER',m.first+' '+m.last+' ('+m.id+')');
+  MEMBERS.splice(idx,1);
+  saveAll(); closeModal();
+  showToast('✓ Removed '+m.first+' '+m.last);
+  renderMembers();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ADMIN
+// ═══════════════════════════════════════════════════════════════
+var ADMIN_TABS=['overview','audit','resets'];
+
+function renderAdmin(){
+  if(!canAdmin()) return;
+  var tabs=ADMIN_TABS.map(function(t){
+    var labels={overview:'Overview',audit:'Audit Log',resets:'Resets'};
+    return '<button class="atab '+(adminTab===t?'active':'')+'" onclick="switchAdminTab(\''+t+'\')">'+labels[t]+'</button>';
+  }).join('');
+
+  var panelHtml='';
+  if(adminTab==='overview') panelHtml=renderAdminOverview();
+  else if(adminTab==='audit') panelHtml=renderAdminAudit();
+  else if(adminTab==='resets') panelHtml=renderAdminResets();
+
+  document.getElementById('adminView').innerHTML=
+    '<div class="admin-banner"><h2>⚙ Admin Panel</h2><p>'+roleLabel(user)+' · '+new Date().toLocaleDateString('en-AU')+'</p></div>'+
+    '<div class="admin-tabs">'+tabs+'</div>'+
+    panelHtml;
+}
+
+function switchAdminTab(t){adminTab=t;renderAdmin();}
+
+function renderAdminOverview(){
+  var total=inventory.length;
+  var alerts=getAlerts();
+  var good=0,low=0,crit=0,exp=0;
+  inventory.forEach(function(item){
+    var s=computeStatus(item);
+    if(s==='good') good++;
+    else if(s==='low') low++;
+    else if(s==='critical') crit++;
+    else if(s==='expiring') exp++;
+  });
+  return '<div class="admin-section"><div class="admin-section-title">Stock Summary</div>'+
+    '<div class="stat-row"><span>Total Items</span><span class="stat-val">'+total+'</span></div>'+
+    '<div class="stat-row"><span>OK / Full</span><span class="stat-val green">'+good+'</span></div>'+
+    '<div class="stat-row"><span>Low Stock</span><span class="stat-val yellow">'+low+'</span></div>'+
+    '<div class="stat-row"><span>Critical / Empty</span><span class="stat-val red">'+crit+'</span></div>'+
+    '<div class="stat-row"><span>Expiring Soon</span><span class="stat-val yellow">'+exp+'</span></div>'+
+    '<div class="stat-row"><span>Active Alerts</span><span class="stat-val red">'+alerts.length+'</span></div>'+
+    '<div class="stat-row"><span>Members</span><span class="stat-val">'+MEMBERS.length+'</span></div>'+
+  '</div>'+
+  '<div class="admin-section"><div class="admin-section-title">Print</div>'+
+    '<button class="btn-print" onclick="doPrint()">🖨 Print Stocktake Report</button>'+
+  '</div>';
+}
+
+function renderAdminAudit(){
+  if(auditLog.length===0){
+    return '<div class="admin-section"><div class="admin-section-title">Audit Log</div>'+
+      '<p style="font-size:13px;color:var(--muted);padding:8px 0">No audit entries yet.</p></div>';
+  }
+  var entries=[].concat(auditLog).reverse().slice(0,50).map(function(e){
+    return '<div class="audit-entry">'+
+      '<div class="audit-entry-top">'+
+        '<span class="audit-entry-name">'+esc(e.by)+'</span>'+
+        '<span class="audit-entry-time">'+new Date(e.at).toLocaleString('en-AU')+'</span>'+
+      '</div>'+
+      '<div class="audit-entry-detail"><b>'+esc(e.action)+'</b>: '+esc(e.detail)+'</div>'+
+    '</div>';
+  }).join('');
+  return '<div class="admin-section"><div class="admin-section-title">Audit Log (last 50)</div>'+entries+'</div>';
+}
+
+function renderAdminResets(){
+  if(!canManageInventory()&&!canManageAdmins()){
+    return '<div class="admin-section"><p style="font-size:13px;color:var(--muted);padding:8px 0">Reset functions require Inventory Admin, Commander or Owner.</p></div>';
+  }
+  return '<div class="admin-section"><div class="admin-section-title">Reset Inventory</div>'+
+    '<div class="reset-grid">'+
+      '<button class="btn-reset" onclick="confirmClearInventory()">🗑 Clear All Inventory Items</button>'+
+    '</div></div>'+
+    (canManageAdmins()?
+    '<div class="admin-section"><div class="admin-section-title" style="color:var(--red)">Danger Zone</div>'+
+      '<button class="btn-reset-danger" onclick="confirmRestoreDefaults()">⚠ RESTORE ALL DEFAULTS</button>'+
+      '<p style="font-size:11px;color:var(--muted);margin-top:8px">Restores member list to original defaults and clears all inventory. Cannot be undone.</p>'+
+    '</div>':'');
+}
+
+function confirmClearInventory(){
+  openModal('Clear All Inventory',
+    '<p style="font-size:14px;color:var(--muted);line-height:1.7">This will permanently delete all <b style="color:var(--text)">'+inventory.length+' stock items</b>.<br>The member list will not be affected. Cannot be undone.</p>',
+    [{label:'Cancel',cls:'cancel',fn:'closeModal()'},
+     {label:'Clear All',cls:'danger',fn:'doClearInventory()'}]);
+}
+function doClearInventory(){
+  audit('CLEAR_INVENTORY','All '+inventory.length+' items deleted');
+  inventory=[];invExpanded={};
+  saveAll(); closeModal();
+  showToast('✓ Inventory cleared');
+  renderAdmin();
+}
+
+function confirmRestoreDefaults(){
+  openModal('Restore Factory Defaults',
+    '<p style="font-size:14px;color:var(--muted);line-height:1.7">Reset <b style="color:var(--text)">member list to defaults</b> and clear all inventory data?<br>Every change will be lost. Cannot be undone.</p>',
+    [{label:'Cancel',cls:'cancel',fn:'closeModal()'},
+     {label:'Restore Defaults',cls:'danger',fn:'doRestoreDefaults()'}]);
+}
+function doRestoreDefaults(){
+  MEMBERS=cloneMembers();inventory=[];auditLog=[];invExpanded={};
+  enforceInvariants();
+  saveAll(); closeModal();
+  showToast('✓ Restored to defaults');
+  renderAdmin();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PRINT
+// ═══════════════════════════════════════════════════════════════
+function doPrint(){
+  if(!canPrint()){showToast('Print restricted');return;}
+  var today=new Date().toLocaleDateString('en-AU');
+  var time=new Date().toLocaleTimeString('en-AU');
+  var who=user.first+' '+user.last;
+
+  var rows=inventory.map(function(item,i){
+    var s=computeStatus(item);
+    var ci=classInfo(item.classification);
+    var stBg={good:'#d4edda',low:'#fff3cd',critical:'#f8d7da',expiring:'#fff0d4',unknown:'#f8f9fa',na:'#f8f9fa'}[s]||'#f8f9fa';
+    var stCl={good:'#155724',low:'#856404',critical:'#721c24',expiring:'#7a4f00',unknown:'#6c757d',na:'#6c757d'}[s]||'#6c757d';
+    var stLbl=statusLabel(s);
+    var days=daysToExpiry(item.expiryDate);
+    var expiryTxt=item.expiryDate?(days<0?'EXPIRED':'Expires '+new Date(item.expiryDate).toLocaleDateString('en-AU')):'—';
+    return '<tr style="background:'+(i%2===0?'#f8f9fa':'#fff')+'">'+
+      '<td style="padding:5px 10px"><b>'+esc(item.name)+'</b>'+
+        (item.matNo?'<br><span style="color:#888;font-size:9px">Mat: '+esc(item.matNo)+'</span>':'')+
+        (item.notes?'<br><span style="color:#666;font-size:9px;font-style:italic">'+esc(item.notes)+'</span>':'')+
+      '</td>'+
+      '<td style="padding:5px 10px">'+ci.icon+' '+esc(ci.label)+'</td>'+
+      '<td style="padding:5px 10px">'+esc(item.location||'')+(item.sublocation?' · '+esc(item.sublocation):'')+'</td>'+
+      '<td style="padding:5px 10px;text-align:center;font-weight:700;font-size:14px">'+(item.qtyOnHand!=null?item.qtyOnHand:'—')+'</td>'+
+      '<td style="padding:5px 10px;text-align:center"><span style="background:'+stBg+';color:'+stCl+';padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700">'+stLbl+'</span></td>'+
+      '<td style="padding:5px 10px;font-size:10px;color:#555">'+expiryTxt+'</td>'+
+    '</tr>';
+  }).join('');
+
+  var alerts=getAlerts();
+  var alertRows=alerts.map(function(a){
+    var typeCl={critical:'#721c24',low:'#856404',expiring:'#7a4f00'}[a.type]||'#555';
+    var typeBg={critical:'#f8d7da',low:'#fff3cd',expiring:'#fff0d4'}[a.type]||'#fff';
+    return '<tr>'+
+      '<td style="padding:5px 10px"><b>'+esc(a.item.name)+'</b></td>'+
+      '<td style="padding:5px 10px">'+esc(a.item.location||'—')+'</td>'+
+      '<td style="padding:5px 10px;text-align:center;font-weight:700">'+a.item.qtyOnHand+'</td>'+
+      '<td style="padding:5px 10px"><span style="background:'+typeBg+';color:'+typeCl+';padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700">'+a.msg+'</span></td>'+
+    '</tr>';
+  }).join('');
+
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Stocktake Report — Cessnock City Unit</title>'+
+    '<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:12px;color:#222;padding:16px}'+
+    'h1{font-size:20px;font-weight:800;color:#0B1F3A;margin-bottom:2px}'+
+    'h2{font-size:13px;font-weight:400;color:#555;margin-bottom:2px}'+
+    '.meta{font-size:11px;color:#555;margin-bottom:20px;border-bottom:2px solid #0B1F3A;padding-bottom:10px}'+
+    '.meta span{margin-right:20px}'+
+    '.section{margin-bottom:24px}'+
+    '.section-title{background:#37474F;color:#fff;padding:6px 12px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-radius:4px 4px 0 0}'+
+    'table{width:100%;border-collapse:collapse;font-size:11px}'+
+    'th{background:#546E7A;color:#fff;padding:5px 10px;text-align:left}'+
+    'td{border-bottom:1px solid #eee}'+
+    '.pb{position:fixed;top:12px;right:12px;padding:10px 20px;background:#FF5A00;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer}'+
+    '@media print{.pb{display:none}}</style></head><body>'+
+    '<button class="pb" onclick="window.print()">Print / Save PDF</button>'+
+    '<h1>Stocktake Report — NSW SES Cessnock City Unit</h1>'+
+    '<h2>NSW State Emergency Service · Cessnock City Unit · Stores &amp; Inventory</h2>'+
+    '<div class="meta"><span><b>Date:</b> '+today+'</span><span><b>Time:</b> '+time+'</span><span><b>Prepared by:</b> '+esc(who)+'</span><span><b>Role:</b> '+esc(roleLabel(user))+'</span></div>'+
+    (alerts.length>0?
+    '<div class="section"><div class="section-title">⚠ Alerts ('+alerts.length+')</div>'+
+    '<table><tr><th>Item</th><th>Location</th><th>Qty On Hand</th><th>Alert</th></tr>'+alertRows+'</table></div>':'')+
+    '<div class="section"><div class="section-title">Full Stock Register ('+inventory.length+' items)</div>'+
+    '<table><tr><th>Item</th><th>Classification</th><th>Location</th><th>Qty</th><th>Status</th><th>Expiry</th></tr>'+rows+'</table></div>'+
+    '</body></html>';
+
+  var w=window.open('','_blank');
+  if(w){w.document.write(html);w.document.close();}
+  else alert('Popup blocked — allow popups to print.');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  MODAL / TOAST / UTILS
+// ═══════════════════════════════════════════════════════════════
+function openModal(title,body,btns){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML=body;
+  document.getElementById('modalBtns').innerHTML=btns.map(function(b){
+    return '<button class="modal-btn '+b.cls+'" onclick="'+b.fn+'">'+b.label+'</button>';
+  }).join('');
+  document.getElementById('modalBackdrop').classList.remove('hidden');
+}
+function closeModal(){document.getElementById('modalBackdrop').classList.add('hidden');}
+document.getElementById('modalBackdrop').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},1800);
+}
+
+function esc(s){
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+window.onerror=function(msg,src,line){
+  showToast('Error: '+(msg||'unknown')+' L'+line);return false;
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════
+loadAll();
+document.getElementById('loginPin').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+document.getElementById('loginName').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('loginPin').focus();});
+</script>
+</body>
+</html>
